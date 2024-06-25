@@ -1,1 +1,35 @@
+pipeline {
+  agent {
+    docker { image 'openjdk:11' }
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage('Build') {
+      steps {
+        sh './gradlew build'
+      }
+    }
+    stage('Test') {
+      steps {
+        sh './gradlew test'
+      }
+    }
+  }
+  post {
+    always {
+      echo 'Cleaning up...'
+      cleanWs()
+    }
+    success {
+      echo 'Build succeeded!'
+    }
+    failure {
+      echo 'Build failed.'
+    }
+  }
+}
 
